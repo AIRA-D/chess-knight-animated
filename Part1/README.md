@@ -23,32 +23,42 @@
 Для нахождения кратчайшего пути от начальной позиции (startX, startY) до целевой позиции (endX, endY) на шахматной доске используется алгоритм поиска в ширину (BFS).
 ``` cpp
 while (!q.empty()) {
-        auto [x, y] = q.front();
-        q.pop();
+   auto [x, y] = q.front();
+   q.pop();
 
-        if (x == endX && y == endY) {
-            return minMoves[x * 8 + y];
-        }
+   if (x == endX && y == endY) {
+      return minMoves[x * 8 + y];
+   }
 
-        for (const auto& move : moves) {
-            int newX = x + move.first;
-            int newY = y + move.second;
-            if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
-                if (!minMoves.count(newX * 8 + newY)) {
-                    minMoves[newX * 8 + newY] = minMoves[x * 8 + y] + 1;
-                    q.emplace(newX, newY);
-                }
-            }
-        }
+   for (const auto& move : moves) {
+      int newX = x + move.first;
+      int newY = y + move.second;
+      if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
+         if (!minMoves.count(newX * 8 + newY)) {
+            minMoves[newX * 8 + newY] = minMoves[x * 8 + y] + 1;
+            q.emplace(newX, newY);
+         }
+      }
+   }
 }
 ```
 
 Вектор возможных ходов `moves` содержит все возможные варианты движения коня на шахматной доске. Каждый элемент вектора представляет собой пару (dx, dy), где dx - смещение по оси x, а dy - смещение по оси y. Конь может прыгать на 2 клетки в одном направлении и на 1 клетку в другом, исходя из этого набор ходов представлен следующим образом:
-```
-moves = {
-    {-2, -1}, {-2, 1}, {2, -1}, {2, 1},
-    {-1, -2}, {-1, 2}, {1, -2}, {1, 2}
+```cpp
+// Возможные ходы
+std::vector<std::pair<int, int>>moves = {
+   {-2,-1}, {-2,1}, {2,-1}, {2,1},
+   {-1,-2}, {-1,2}, {1,-2}, {1,2}
 };
 ```
 
 Для хранения минимального количества ходов для каждой позиции коня используется `std::unordered_map<int, int> minMoves`, где ключом является числовое представление позиции коня на шахматной доске, а значением - минимальное количество ходов до этой позиции.
+
+Пример ввода/вывода:
+--------------------
+Начальная позиция: a1
+Конечная позиция: h8
+Минимальное количество ходов: 6
+Продолжить? (y/n): y
+Начальная позиция:
+...
