@@ -69,7 +69,7 @@ void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int end
     std::queue<QPair<int, int>> positionsQueue;
     positionsQueue.emplace(startX, startY);
 
-    QMap<QPair<int, int>, std::pair<int, int>> previousPositions;
+    QMap<QPair<int, int>, QPair<int, int>> previousPositions;
     QPair<int, int> currentPos;
 
     while (!positionsQueue.empty()) {
@@ -80,7 +80,7 @@ void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int end
             QPair<int, int> retreatPosition = {endX, endY};
             while (retreatPosition != QPair(startX, startY)) {
                 path.push_back(retreatPosition);
-                //retreatPosition = previousPositions[retreatPosition];
+                retreatPosition = previousPositions[retreatPosition];
             }
             path.emplace_back(startX, startY);
             std::reverse(path.begin(), path.end());
@@ -93,7 +93,7 @@ void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int end
             if (newX >= 1 && newX <= 8 && newY >= 1 && newY <= 8) {
                 if (previousPositions.find({newX, newY}) == previousPositions.end()) {
                     positionsQueue.emplace(newX, newY);
-                    //previousPositions[{newX, newY}] = currentPos;
+                    previousPositions[{newX, newY}] = currentPos;
                 }
             }
         }
