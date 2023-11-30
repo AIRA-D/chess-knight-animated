@@ -21,7 +21,7 @@ private slots:
 
 private:
     void drawChessBoard();
-    void convertNotation();
+    void convertNotation(const QString& position, int& x, int& y);
     void pathFinder(int startX, int startY, int endX, int endY);
     int currentStep{};
 
