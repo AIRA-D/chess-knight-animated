@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QTimer>
 #include <QMap>
+#include <QPair>
 
 class ChessKnightPathFinder : public QWidget {
     Q_OBJECT
@@ -21,17 +22,18 @@ private slots:
 private:
     void drawChessBoard();
     void convertNotation();
-    void knight();
+    void pathFinder(int startX, int startY, int endX, int endY);
+    int currentStep{};
+
+    std::vector<QPair<int, int>> path;
+    QMap<QPair<int, int>, QPair<int, int>> shortestWay; // <startX, startY>, <endX, endY>
 
     QPushButton *startButton{};
     QLineEdit *startPosEdit{};
     QLineEdit *endPosEdit{};
     QLabel *knightImage{};
     QTimer *animationTimer{};
-    QMap<QPair<int, int>, QPair<int, int>> shortestWay; // <startX, startY>, <endX, endY>
 
-    std::vector<QPair<int, int>> path;
-    int currentStep{};
 };
 
 
