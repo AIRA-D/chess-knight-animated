@@ -1,10 +1,11 @@
+
+#include "chessknightpathfinder.h"
 #include <QApplication>
-#include "ChessKnightPassFinder.h"
 
-
-int main(int argc, char *argv[]) {
-    QApplication  application(argc, argv);
-    ChessKnightPathFinder mainWindow;
-    mainWindow.show();
-    return QApplication::exec();
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    ChessKnightPathFinder w;
+    w.show();
+    return a.exec();
 }
