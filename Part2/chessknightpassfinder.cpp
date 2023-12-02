@@ -1,62 +1,40 @@
-#include "ChessKnightPassFinder.h"
-#include <QGridLayout>
+#include <QTimer>
+#include <QLabel>
 #include <QPixmap>
-#include <QPair>
-#include <vector>
 #include <queue>
-#include <map>
 
-ChessKnightPathFinder::ChessKnightPathFinder(QWidget *parent) : QWidget(parent){
-    startButton = new QPushButton("Старт!", this);
-    startPosEdit = new QLineEdit(this);
-    endPosEdit = new QLineEdit(this);
-    knightImage = new QLabel(this);
-    drawChessBoard();
+#include "chessknightpathfinder.h"
+#include "./ui_chessknightpathfinder.h"
 
-    connect(startButton, SIGNAL(clicked()), this, SLOT(onStartButtonClicked()));
+ChessKnightPathFinder::ChessKnightPathFinder(QWidget *parent): QMainWindow(parent), ui(new Ui::ChessKnightPathFinder)
+{
+    ui->setupUi(this);
+    drawChessboard();
 
-    /*
-     * UI
-     */
+    startPosEdit = findChild<QLineEdit *>("lineEditStart");  // Assign the member variable
+    endPosEdit = findChild<QLineEdit *>("lineEditEnd");  // Assign the member variable
+    startButton = findChild<QPushButton *>("startButton");  // Assign the member variable
 
     animationTimer = new QTimer(this);
-    connect(animationTimer, SIGNAL(timeout()), this, SLOT(animateKnightMovement()));
+
+    connect(startButton, &QPushButton::clicked, this, &ChessKnightPathFinder::on_startButton_clicked);
+    connect(startPosEdit, &QLineEdit::textEdited, this, &ChessKnightPathFinder::on_lineEditStart_textEdited);
+    connect(endPosEdit, &QLineEdit::textEdited, this, &ChessKnightPathFinder::on_lineEditEnd_textEdited);
+    connect(animationTimer, &QTimer::timeout, this, &ChessKnightPathFinder::animateKnightMovement);
 }
 
-void ChessKnightPathFinder::drawChessBoard()  {
-    auto *gridLayout = new QGridLayout;
-
-    const int numRows = 8;
-    const int numCols = 8;
-
-    for (int row = 0; row < numRows; ++row) {
-        for (int col = 0; col < numCols; ++col) {
-            auto *squareLabel = new QLabel(this);
-            squareLabel->setFixedSize(50, 50); // Set the size of each square
-            if ((row + col) % 2 == 0) {
-                squareLabel->setStyleSheet("background-color: white");
-            } else {
-                squareLabel->setStyleSheet("background-color: gray");
-            }
-            gridLayout->addWidget(squareLabel, row, col);
-        }
-    }
-
-    QStringList horizontalLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
-    QStringList verticalLabels = {"8", "7", "6", "5", "4", "3", "2", "1"};
-
-    for (int i = 0; i < numCols; ++i) {
-        auto *horizontalLabel = new QLabel(horizontalLabels.at(i), this);
-        auto verticalLabel = new QLabel(verticalLabels.at(i), this);
-        horizontalLabel->setAlignment(Qt::AlignHCenter);
-        verticalLabel->setAlignment(Qt::AlignVCenter);
-        gridLayout->addWidget(horizontalLabel, numRows, i, 1, 1, Qt::AlignHCenter);
-        gridLayout->addWidget(verticalLabel, i, numCols, 1, 1, Qt::AlignVCenter);
-    }
-
-    setLayout(gridLayout);
+ChessKnightPathFinder::~ChessKnightPathFinder()
+{
+    delete ui;
 }
-void ChessKnightPathFinder::onStartButtonClicked() {
+
+void ChessKnightPathFinder::on_lineEditEnd_textEdited(const QString &arg1){}
+
+void ChessKnightPathFinder::on_lineEditStart_textEdited(const QString &arg1){}
+
+
+void ChessKnightPathFinder::on_startButton_clicked()
+{
     QString startPos = startPosEdit->text();
     QString endPos = endPosEdit->text();
 
@@ -71,22 +49,76 @@ void ChessKnightPathFinder::onStartButtonClicked() {
     animationTimer->start(500);
     startButton->setEnabled(false);
 }
-void ChessKnightPathFinder::animateKnightMovement() {
+
+void ChessKnightPathFinder::drawChessboard()  {
+
+    auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
+
+    const int numRows = 8;
+    const int numCols = 8;
+
+    for (int row = 0; row < numRows; ++row) {
+        for (int col = 0; col < numCols; ++col) {
+            auto *squareLabel = new QLabel(this);
+            squareLabel->setFixedSize(50, 50); // Set the size of each square
+            if ((row + col) % 2 == 0) {
+                squareLabel->setStyleSheet("background-color: white");
+            } else {
+                squareLabel->setStyleSheet("background-color: #99582a");
+            }
+            chessboardLayout->addWidget(squareLabel, row, col);
+        }
+    }
+
+    QStringList horizontalLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
+    QStringList verticalLabels = {"8", "7", "6", "5", "4", "3", "2", "1"};
+
+    for (int i = 0; i < numCols; ++i) {
+        auto *horizontalLabel = new QLabel(horizontalLabels.at(i), this);
+        auto verticalLabel = new QLabel(verticalLabels.at(i), this);
+        horizontalLabel->setAlignment(Qt::AlignHCenter);
+        verticalLabel->setAlignment(Qt::AlignVCenter);
+        chessboardLayout->addWidget(horizontalLabel, numRows, i, 1, 1, Qt::AlignHCenter);
+        chessboardLayout->addWidget(verticalLabel, i, numCols, 1, 1, Qt::AlignVCenter);
+    }
+
+   // setLayout(gridLayout);
+
+}
+
+void ChessKnightPathFinder::animateKnightMovement() { //15:51:00
     if (currentStep < path.size()) {
-        // Изменение позиции коня на следующий шаг из найденного пути
         int newX = path[currentStep].first;
         int newY = path[currentStep].second;
 
-        // Обновление позиции коня на шахматной доске
-        //...
+        int x = newX - 1;  // Adjust the chessboard index
+        int y = 8 - newY;  // Adjust the chessboard index
 
-        // Увеличение шага для следующей итерации
+        if (knightImage == nullptr) {
+            knightImage = new QLabel(this);
+            QPixmap pixmap("knight.png");
+            knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
+            auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
+            chessboardLayout->addWidget(knightImage, y, x);
+        } else {
+            auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
+            chessboardLayout->removeWidget(knightImage);
+            knightImage->deleteLater();
+            knightImage = nullptr;
+
+            knightImage = new QLabel(this);
+            QPixmap pixmap("knight.png");
+            knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
+            chessboardLayout->addWidget(knightImage, y, x);
+        }
+
         currentStep++;
     } else {
         animationTimer->stop();
         startButton->setEnabled(true);
     }
 }
+
 void ChessKnightPathFinder::convertNotation(const QString& position, int& x, int& y) {
     QChar col = position.at(0).toLower();  // Convert the letter to lowercase, allowing both uppercase and lowercase input
     QChar row = position.at(1);
@@ -102,6 +134,7 @@ void ChessKnightPathFinder::convertNotation(const QString& position, int& x, int
     x = col.toLatin1() - 'a' + 1;  // a=1, b=2, ..., h=8
     y = row.digitValue();
 }
+
 void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int endY) {
     // Возможные ходы
     const std::vector<std::pair<int, int>> moves = {
@@ -142,3 +175,5 @@ void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int end
         }
     }
 }
+
+
