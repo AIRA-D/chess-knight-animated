@@ -91,26 +91,26 @@ void ChessKnightPathFinder::animateKnightMovement() {
         int newX = path[currentStep].first;
         int newY = path[currentStep].second;
 
-        int x = newX - 1;
-        int y = 8 - newY;
+        int x = newX - 1;  // Convert 1-8 to array index 0-7
+        int y = 8 - newY;  // Adjust to account for the board's orientation
 
-        if (knightImage == nullptr) {
-            knightImage = new QLabel(this);
-            QPixmap pixmap("/home/aira/PathFinder/knight.png");
-            knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
-            auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
-            chessboardLayout->addWidget(knightImage, y, x);
-        } else {
-            auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
-            chessboardLayout->removeWidget(knightImage);
-            knightImage->deleteLater();
-            knightImage = nullptr;
+        auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
 
-            knightImage = new QLabel(this);
-            QPixmap pixmap("/home/aira/PathFinder/knight.png");
-            knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
-            chessboardLayout->addWidget(knightImage, y, x);
+        QLabel* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
+        QPixmap knightPixmap("/home/aira/PathFinder/knight.png");  // Use the specified file path
+
+        if (currentChessLabel) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    QLabel* label = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(i, j)->widget());
+                    if (label) {
+                        label->clear();  // clear the content of the label
+                    }
+                }
+            }
+            currentChessLabel->setPixmap(knightPixmap.scaled(50, 50, Qt::KeepAspectRatio));
         }
+
         currentStep++;
     } else {
         animationTimer->stop();
