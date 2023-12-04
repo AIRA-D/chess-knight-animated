@@ -97,7 +97,8 @@ void ChessKnightPathFinder::animateKnightMovement() {
         auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
 
         QLabel* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
-        QPixmap knightPixmap("/home/aira/PathFinder/knight.png");  // TODO: использовать систему ресурсов Qt
+        //QPixmap knightPixmap("/home/aira/PathFinder/knight.png");
+        QPixmap knightPixmap(":/knight.png");
 
         if (currentChessLabel) {
             for (int i = 0; i < 8; i++) {
@@ -119,11 +120,11 @@ void ChessKnightPathFinder::animateKnightMovement() {
 }
 
 void ChessKnightPathFinder::convertNotation(const QString& position, int& x, int& y) {
-    QChar col = position.at(0).toLower();
+    QChar col = position.at(0).toLower();  // Convert the letter to lowercase, allowing both uppercase and lowercase input
     QChar row = position.at(1);
 
     if (col < 'a' || col > 'h' || row < '1' || row > '8') {
-        // Handle out-of-range input, possibly by throwing an exception or setting default values for x and y
+        // handle out-of-range input, possibly by throwing an exception or setting default values for x and y
         x = -1;  // Invalid x
         y = -1;  // Invalid y
         return;
