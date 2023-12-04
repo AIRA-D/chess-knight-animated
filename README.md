@@ -2,8 +2,8 @@
 
 Это приложение рассчитывает кратчайший путь шахматного коня из одной позиции в другую на шахматной доске 8x8 и предоставляет анимированную визуализацию этого движения.
 
-```plaintext
-https://github.com/AIRA-D/chess-knight-animated/blob/main/2023-12-04%2019-28-02.gif
+```markdown
+![](https://github.com/AIRA-D/chess-knight-animated/blob/main/2023-12-04%2019-28-02.gif)
 ```
 
 --------
