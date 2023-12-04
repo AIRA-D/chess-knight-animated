@@ -1,4 +1,3 @@
-
 #include "chessknightpathfinder.h"
 #include <QApplication>
 
