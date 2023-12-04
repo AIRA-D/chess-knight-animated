@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.5)
 
 project(PathFinder VERSION 0.1 LANGUAGES CXX)
@@ -21,6 +20,7 @@ set(PROJECT_SOURCES
         chessknightpathfinder.h
         chessknightpathfinder.ui
         knight.png
+        resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
