@@ -35,6 +35,7 @@
 -----------
 
 ## Скриншоты
+![](https://github.com/AIRA-D/chess-knight-animated/assets/100157397/b2c614a6-4f31-42eb-ac86-879170e5ed64)
 
 
 -------------
