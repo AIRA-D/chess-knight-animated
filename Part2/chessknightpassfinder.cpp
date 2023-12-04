@@ -1,7 +1,9 @@
 #include <QTimer>
 #include <QLabel>
 #include <QPixmap>
+#include <qdebug.h>
 #include <queue>
+#include <QPainter>
 
 #include "chessknightpathfinder.h"
 #include "./ui_chessknightpathfinder.h"
@@ -82,21 +84,19 @@ void ChessKnightPathFinder::drawChessboard()  {
         chessboardLayout->addWidget(verticalLabel, i, numCols, 1, 1, Qt::AlignVCenter);
     }
 
-   // setLayout(gridLayout);
-
 }
 
-void ChessKnightPathFinder::animateKnightMovement() { //15:51:00
+void ChessKnightPathFinder::animateKnightMovement() {
     if (currentStep < path.size()) {
         int newX = path[currentStep].first;
         int newY = path[currentStep].second;
 
-        int x = newX - 1;  // Adjust the chessboard index
-        int y = 8 - newY;  // Adjust the chessboard index
+        int x = newX - 1;
+        int y = 8 - newY;
 
         if (knightImage == nullptr) {
             knightImage = new QLabel(this);
-            QPixmap pixmap("knight.png");
+            QPixmap pixmap("/home/aira/PathFinder/knight.png");
             knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
             auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
             chessboardLayout->addWidget(knightImage, y, x);
@@ -107,11 +107,10 @@ void ChessKnightPathFinder::animateKnightMovement() { //15:51:00
             knightImage = nullptr;
 
             knightImage = new QLabel(this);
-            QPixmap pixmap("knight.png");
+            QPixmap pixmap("/home/aira/PathFinder/knight.png");
             knightImage->setPixmap(pixmap.scaled(50, 50, Qt::KeepAspectRatio));
             chessboardLayout->addWidget(knightImage, y, x);
         }
-
         currentStep++;
     } else {
         animationTimer->stop();
