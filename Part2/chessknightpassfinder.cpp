@@ -97,7 +97,7 @@ void ChessKnightPathFinder::animateKnightMovement() {
         auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
 
         QLabel* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
-        QPixmap knightPixmap("/home/aira/PathFinder/knight.png");  // Use the specified file path
+        QPixmap knightPixmap("/home/aira/PathFinder/knight.png");  // TODO: использовать систему ресурсов Qt
 
         if (currentChessLabel) {
             for (int i = 0; i < 8; i++) {
@@ -119,7 +119,7 @@ void ChessKnightPathFinder::animateKnightMovement() {
 }
 
 void ChessKnightPathFinder::convertNotation(const QString& position, int& x, int& y) {
-    QChar col = position.at(0).toLower();  // Convert the letter to lowercase, allowing both uppercase and lowercase input
+    QChar col = position.at(0).toLower();
     QChar row = position.at(1);
 
     if (col < 'a' || col > 'h' || row < '1' || row > '8') {
