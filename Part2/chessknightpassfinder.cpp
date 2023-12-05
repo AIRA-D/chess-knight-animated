@@ -103,7 +103,7 @@ void ChessKnightPathFinder::animateKnightMovement() {
         if (currentChessLabel) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    QLabel* label = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(i, j)->widget());
+                    auto* label = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(i, j)->widget());
                     if (label) {
                         label->clear();  // clear the content of the label
                     }
