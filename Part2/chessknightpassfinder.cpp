@@ -96,7 +96,7 @@ void ChessKnightPathFinder::animateKnightMovement() {
 
         auto *chessboardLayout = findChild<QGridLayout *>("chessboard");
 
-        QLabel* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
+        auto* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
         //QPixmap knightPixmap("/home/aira/PathFinder/knight.png");
         QPixmap knightPixmap(":/knight.png");
 
