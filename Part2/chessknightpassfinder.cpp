@@ -4,6 +4,8 @@
 #include <qdebug.h>
 #include <queue>
 #include <QPainter>
+#include <QMessageBox>
+#include <iostream>
 
 #include "chessknightpathfinder.h"
 #include "./ui_chessknightpathfinder.h"
@@ -41,8 +43,14 @@ void ChessKnightPathFinder::on_startButton_clicked()
     QString endPos = endPosEdit->text();
 
     int startX, startY, endX, endY;
-    convertNotation(startPos, startX, startY);
-    convertNotation(endPos, endX, endY);
+
+    try {
+        convertNotation(startPos, startX, startY);
+        convertNotation(endPos, endX, endY);
+    } catch (const char* msg) {
+        std::cerr << "Error: " << msg << std::endl;
+    }
+
 
     path.clear();
     pathFinder(startX, startY, endX, endY);
@@ -64,9 +72,9 @@ void ChessKnightPathFinder::drawChessboard()  {
             auto *squareLabel = new QLabel(this);
             squareLabel->setFixedSize(50, 50); // Set the size of each square
             if ((row + col) % 2 == 0) {
-                squareLabel->setStyleSheet("background-color: white");
+                squareLabel->setStyleSheet("background-color: #ffffff");
             } else {
-                squareLabel->setStyleSheet("background-color: #99582a");
+                squareLabel->setStyleSheet("background-color: #fb6f92");
             }
             chessboardLayout->addWidget(squareLabel, row, col);
         }
@@ -98,7 +106,7 @@ void ChessKnightPathFinder::animateKnightMovement() {
 
         auto* currentChessLabel = qobject_cast<QLabel*>(chessboardLayout->itemAtPosition(y, x)->widget());
         //QPixmap knightPixmap("/home/aira/PathFinder/knight.png");
-        QPixmap knightPixmap(":/knight.png");
+        QPixmap knightPixmap(":/knight1.png");
 
         if (currentChessLabel) {
             for (int i = 0; i < 8; i++) {
@@ -120,19 +128,18 @@ void ChessKnightPathFinder::animateKnightMovement() {
 }
 
 void ChessKnightPathFinder::convertNotation(const QString& position, int& x, int& y) {
-    QChar col = position.at(0).toLower();  // Convert the letter to lowercase, allowing both uppercase and lowercase input
+
+    QChar col = position.at(0).toLower();// Convert the letter to lowercase, allowing both uppercase and lowercase input
     QChar row = position.at(1);
 
     if (col < 'a' || col > 'h' || row < '1' || row > '8') {
-        // handle out-of-range input, possibly by throwing an exception or setting default values for x and y
-        x = -1;  // Invalid x
-        y = -1;  // Invalid y
-        return;
+        throw "Некоректный ввод";
     }
 
     // Преобразование col и row в соответствующие координаты x и y
     x = col.toLatin1() - 'a' + 1;  // a=1, b=2, ..., h=8
     y = row.digitValue();
+
 }
 
 void ChessKnightPathFinder::pathFinder(int startX, int startY, int endX, int endY) {
